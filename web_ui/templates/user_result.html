@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Row Result</title>
+</head>
+<body>
+    <h1>Display The Result</h1>
+    <br>
+    <table>
+    <tr>
+    <th>id</th>
+    <th>id_count</th>
+    </tr>
+          {% for item in items %}
+    <TR>
+
+       <TD class="id">id: {{item[0]}}</TD>
+       <TD class="id_count">id_count: {{item[1]}}</TD>
+
+    </TR>
+    {% endfor %}
+    </table>
+</body>
+</html>

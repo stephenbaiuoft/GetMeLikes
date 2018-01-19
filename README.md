@@ -2,29 +2,39 @@
 This repository is a Data Engineering project that batch-processes personal tweets
 and provide keywords/phrases to individual users.
 
-#### Project Idea
+# Table of Contents
+
+* [About](#about)
+* [Use cases](#use-cases)
+* [Which technologies are well\-suited to solve those challenges? (list all relevant)](#which-technologies-are-well-suited-to-solve-those-challenges-list-all-relevant)
+* [Proposed architecture (Lamda Architecture)](#proposed-architecture-lamda-architecture)
+
+
+# About
 The project is to analyse individual's tweets to show each user's top phrases
 that are more likely to be retweeted.
 
-#### What is the purpose, and most common use cases?
-The purpose to is provide an enhanced and personalized service so that each user's post
+# Use cases
+- The purpose to is provide an enhanced and personalized service so that each user's post
 may get more retweets
 
-The service helps individual users understand their most retweeted keywords that
+- The service helps individual users understand their most retweeted keywords that
 they can utilize to get more social network attention(similar to LPP).
 
-Note the data is tweets can the project infrastructure can easily extend to
+- Note the data is tweets can the project infrastructure can easily extend to
 any other social networks such as Instagrams and Facebook.
 
-#### Which technologies are well-suited to solve those challenges? (list all relevant)
+# Which technologies are well-suited to solve those challenges? (list all relevant)
 
-- *HDFS*: this is for storing large amount of raw tweeter data, also for saving
+- *S3*: this is for storing large amount of raw tweeter data, also for saving
 processed tweeter data
 
-- *Spark*: for fast keyword counting
+- *Spark*: for batch keyword counting
 
-- *Database* to store parsed certain keywords and data, sorted by time?
+- *Cassandra*: to store parsed certain keywords and data, for time series data
 
-#### Proposed architecture
+- *Spark Streaming*: to handle real-time twitter data and update the database
 
-HDFS --> Spark --> Database
+# Proposed architecture (Lamda Architecture)
+
+<img src=https://s3-us-west-2.amazonaws.com/stephen-image-storage/insight-project/model-01.jpg>
