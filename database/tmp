@@ -1,0 +1,16 @@
+Trump data structure
+
+root
+ |-- created_at: string (nullable = true)
+ |-- favorite_count: long (nullable = true)
+ |-- id_str: string (nullable = true)
+ |-- is_retweet: boolean (nullable = true)
+ |-- retweet_count: long (nullable = true)
+ |-- source: string (nullable = true)
+ |-- text: string (nullable = true)
+
+
+# what twitter data dump and live api offers
+ |-- created_at: string (nullable = true) ok
+ |-- favorite_count: long (nullable = true)
+ |-- id_str: string (nullable = true)  ==>  IM USING|-- id: long (nullable = true)

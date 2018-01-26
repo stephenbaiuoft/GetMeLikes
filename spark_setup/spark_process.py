@@ -1,9 +1,14 @@
 #!/usr/bin/
-from pyspark import *
-from pyspark.sql import SQLContext
+
+from pyspark.sql import SparkSession
+
+# note sparknlp is external package to pyspark
+from sparknlp.annotator import *
+from pyspark.ml import Pipeline
+from sparknlp.base import DocumentAssembler, Finisher
+from pyspark.sql import Row
 
 from config.sparkconfig import *
-
 
 # from cassandra.cluster import Cluster
 
@@ -13,7 +18,7 @@ class spark_service:
         self.conf = SparkConf().setAppName(APP_NAME).setMaster(MASTER)
         # sc -> spark context object
         self.sc = SparkContext(conf=self.conf)
-        self.sqlContext = SQLContext(self.sc)
+        self.sqlContext = (self.sc)
 
         # use PARTIAL_DATA for now
         self.twitter_df = self.sqlContext.\
@@ -68,6 +73,10 @@ def main():
 
 # function for init cluster_name
 def init_spark(cluster_name):
+    a = []
+    if len(a) is 0:
+        print("hello")
+
     pass
 
 
@@ -77,5 +86,8 @@ def import_s3data():
 
     pass
 
+
 if __name__ == '__main__':
-    main()
+
+    pass
+    # main()

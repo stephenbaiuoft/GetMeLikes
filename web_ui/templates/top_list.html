@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Top List</title>
+</head>
+<body>
+    <h1>Top List Result</h1>
+    <br>
+    <table>
+    <tr>
+    <th>word</th>
+    <th>word_count</th>
+    </tr>
+          {% for item in items %}
+    <TR>
+
+       <TD class="word">words: {{item[0]}}</TD>
+       <TD class="word_count">word_count: {{item[1]}}</TD>
+
+    </TR>
+    {% endfor %}
+    </table>
+</body>
+</html>
