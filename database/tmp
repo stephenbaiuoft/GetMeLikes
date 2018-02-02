@@ -1,3 +1,55 @@
+
+
+
+
+
+
+'id AS tid',\
+'user.id AS uid',\
+'text AS tweet',\
+'user.created_at AS creation_time',\
+'user.time_zone AS time_zone',\
+'user.followers_count AS followers_count',\
+'user.friends_count AS friends_count',\
+'place.name AS city_name',\
+'place.country AS country_name',\
+'entities.media.media_url AS media_ary',\
+'entities.hashtags.text AS hashtag_ary',\
+'retweet_count',\
+'favorite_count'   
+
+Trump
+ |-- created_at: string (nullable = true)
+ |-- favorite_count: long (nullable = true)
+ |-- id_str: string (nullable = true)
+ |-- is_retweet: boolean (nullable = true)
+ |-- retweet_count: long (nullable = true)
+ |-- source: string (nullable = true)
+ |-- text: string (nullable = true)
+
+
+tid=0, 
+uid=1,
+tweet=2
+creation_time=3
+time_zone=4
+followers_count=5
+friends_count=6,
+city_name=7
+country_name=8,
+media_ary=9, 
+hashtag_ary=10,
+retweet_count=11,
+favorite_count=12
+
+
+
+
+Row(city_name=None, country_name=None, creation_date='2010-09-24', creation_hour=11, creation_timestamp='2010-09-24 11:04:40+00:00', followers_count=140, friends_count=204, media_attached=False, phrase_token=['n/a'], sent_count=1, tag_count=0, tid=362814954803433472, time_zone=u'London', token_fav_set=[(u'psalm', 0), (u'119', 0), (u'133', 0)], token_rt_set=[(u'psalm', 0), (u'119', 0), (u'133', 0)], tweet=u'Psalm 119:133', uid=194531988)
+
+
+
+
 Trump data structure
 
 root
@@ -14,3 +66,6 @@ root
  |-- created_at: string (nullable = true) ok
  |-- favorite_count: long (nullable = true)
  |-- id_str: string (nullable = true)  ==>  IM USING|-- id: long (nullable = true)
+ |-- retweet_count: long (nullable = true)
+ |-- text: string (nullable = true)
+

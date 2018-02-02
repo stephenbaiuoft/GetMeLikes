@@ -1,3 +1,14 @@
+# create batch_test
+CREATE TABLE batch_test(
+uid int PRIMARY KEY,
+top_word_list list<frozen <tuple<text,int>>>
+);
+
+##### SYNTAX####
+
+CREATE TABLE ttt (id varchar PRIMARY KEY, 
+       address_mapping list<frozen<tuple<text,text>>>);
+
 # this doc is for correct syntax of table 1
 ============> TABLE 1 main storage=======================
 					// yyyy-month-day
