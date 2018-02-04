@@ -1,0 +1,158 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Horizontal Bar Chart II</title>
+    <script src="static/Chart.bundle.js"></script>
+    <script src="static/utils.js"></script>
+    <script src="static/custom_util.js"> </script>
+    <style>
+    canvas {
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+    div.radiobox{
+        background-color: #ffffe6;
+        width: 20%;
+        display: inline-block;
+        position: relative;
+        left: 70%;
+        border: 3px solid black;
+        padding: 10px;
+        margin: 20px;
+    }
+
+    div.dbox {
+        background-color: #e6ffff;
+        padding: 10px;
+        margin: 10px;
+    }
+
+    </style>
+</head>
+
+<body>
+
+    <center><h1>Your Tweet Report</h1></center>
+    <div class="radiobox">
+    <form align ='right'>
+      <input type="radio" name="gender" value="male" checked> By retweet count<br>
+      <input type="radio" name="gender" value="female"> By favourate count<br>
+    </form>
+    </div>
+
+    <br>
+    <div class="dbox">
+    <div id="container" style="width: 100%;">
+        <canvas id="canvas"></canvas>
+    </div>
+    </div>
+
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <div class="dbox">
+    <div id="container2" style="width: 100%;">
+        <canvas id="canvas2"></canvas>
+    </div>
+
+    </div>
+
+    <script>
+
+        var color = Chart.helpers.color;
+        var hb = {
+            labels: [{% for item in labels %}
+                      "{{item}}",
+                  {% endfor %}]
+                  ,
+            datasets: [{
+                label: "Top Words",
+                backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+                borderColor: window.chartColors.blue,
+                data: [
+                     {% for item in values %}
+                      "{{item}}",
+                  {% endfor %}
+                  ],
+            }, ]}
+
+        window.onload = function() {
+            var ctx = document.getElementById("canvas").getContext("2d");
+            window.myHorizontalBar = new Chart(ctx, {
+                type: 'horizontalBar',
+                data: hb,
+                options: {
+                    elements: {
+                        rectangle: {
+                            borderWidth: 5,
+                        }
+                    },
+                    responsive: true,
+                    legend: {
+                        position: 'right',
+                    },
+                    title: {
+                        display: true,
+                        text: '{{user}}: Most Liked Tweets',
+                        fontSize:16
+                    },
+
+                    scales: {
+                        xAxes: [{
+                          scaleLabel: {
+                            display: true,
+                            labelString: 'number of {{type_name}}',
+                            fontSize: 14,
+                            fontColor: window.chartColors.blue,
+                          }
+                        }]
+                    }
+
+                }
+            });
+
+            var ctx = document.getElementById("canvas2").getContext("2d");
+            window.myHorizontalBar = new Chart(ctx, {
+                type: 'horizontalBar',
+                data: hb,
+                options: {
+                    elements: {
+                        rectangle: {
+                            borderWidth: 5,
+                        }
+                    },
+                    responsive: true,
+                    legend: {
+                        position: 'right',
+                    },
+                    title: {
+                        display: true,
+                        text: '{{user}}: Most Liked Tweets by Time',
+                        fontSize:16
+                    },
+
+                    scales: {
+                        xAxes: [{
+                          scaleLabel: {
+                            display: true,
+                            labelString: 'number of {{type_name}}',
+                            fontSize: 14,
+                            fontColor: window.chartColors.blue,
+                          }
+                        }]
+                    }
+
+                }
+            });
+
+
+        };
+
+    </script>
+</body>
+
+</html>

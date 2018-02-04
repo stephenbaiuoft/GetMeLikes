@@ -29,11 +29,18 @@ def main():
         return redirect(url_for('top_word_list', tid=tid))
 
 
-@webapp.route('/charttest')
-def show_chart_test():
+@webapp.route('/bar')
+def show_bar():
     count_values = [4437267, 3402798, 2868888]
     word_labels = ['thank', 'make america great again', 'country' ]
-    return render_template('chart.html', values=count_values, labels=word_labels)
+    return render_template('bar.html', values=count_values, labels=word_labels)
+
+@webapp.route('/bartest')
+def show_bar_test():
+    count_values = [4437267, 3402798, 2868888]
+    word_labels = ['thank', 'make america great again', 'country' ]
+    return render_template('bar_test.html', user='trump', type_name="retweets",
+                           values=count_values, labels=word_labels)
 
 
 @webapp.route('/chart')
