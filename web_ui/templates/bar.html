@@ -12,64 +12,103 @@
         -webkit-user-select: none;
         -ms-user-select: none;
     }
+    div.radiobox{
+        background-color: #ffffe6;
+        width: 20%;
+        display: inline-block;
+        position: relative;
+        left: 70%;
+        border: 3px solid black;
+        padding: 10px;
+        margin: 20px;
+    }
+
+    div.dbox {
+        background-color: #e6ffff;
+        padding: 10px;
+        margin: 10px;
+    }
+    div.dbox2 {
+        background-color: #e6ffff;
+        padding: 10px;
+        margin: 10px;
+    }
+
     </style>
 </head>
 
 <body>
-    <h1>Top Word List</h1>
-    <div id="container" style="width: 75%;">
+
+    <center><h1>{{user_name}} Tweet Report</h1></center>
+    <div class="radiobox">
+    <form align ='right'>
+      <input type="radio" name="gender" value="male" checked> By retweet count<br>
+      <input type="radio" name="gender" value="female"> By favourate count<br>
+    </form>
+    </div>
+
+    <br>
+    <div class="dbox">
+    <div id="container" style="width: 100%;">
         <canvas id="canvas"></canvas>
     </div>
-    <button id="randomizeData">Randomize Data</button>
-    <button id="addDataset">Add Dataset</button>
-    <button id="removeDataset">Remove Dataset</button>
-    <button id="addData">Add Data</button>
-    <button id="removeData">Remove Data</button>
+    </div>
+
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <div class="dbox">
+    <div id="container2" style="width: 100%;">
+        <canvas id="chart"></canvas>
+    </div>
+
+    </div>
 
     <script>
-
         var color = Chart.helpers.color;
+        var hb = {
+            labels: [{% for item in labels %}
+                      "{{item}}",
+                  {% endfor %}],
+            datasets: [{
+                label: "Top Words",
+                backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+                borderColor: window.chartColors.blue,
+                data: [
+                     {% for item in values %}
+                      "{{item}}",
+                  {% endfor %}
+                  ],
+            }, ]};
+
+
         var barData = {
         labels : [{% for item in labels %}
                       "{{item}}",
                   {% endfor %}],
-        datasets : [
-          {
-             data : [{% for item in values %}
-                          {{item}},
-                        {% endfor %}]
-          }
-          ]
-        };
-
-
-        var hold_v = {{values}}
-        td: [
-        {
-            label: 'Top Words',
-            backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
-            borderColor: window.chartColors.red,
-            borderWidth: 15,
-            data: [
-                hold_v
-            ]
-        }
-        ]
-
-        var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        datasets : [{
+                label: "Top Word",
+                backgroundColor: color(window.chartColors.orange).alpha(0.5).rgbString(),
+                borderColor: window.chartColors.red,
+                data: [
+                     {% for item in values %}
+                      "{{item}}",
+                  {% endfor %}
+                  ],
+            }, ]};
 
 
         window.onload = function() {
             var ctx = document.getElementById("canvas").getContext("2d");
             window.myHorizontalBar = new Chart(ctx, {
                 type: 'horizontalBar',
-                data: barData,
+                data: hb,
                 options: {
-                    // Elements options apply to all of the options unless overridden in a dataset
-                    // In this case, we are setting the border of each horizontal bar to be 2px wide
                     elements: {
                         rectangle: {
-                            borderWidth: 2,
+                            borderWidth: 5,
                         }
                     },
                     responsive: true,
@@ -78,73 +117,55 @@
                     },
                     title: {
                         display: true,
-                        text: 'Your Personal Most Liked Tweets'
+                        text: '{{user_name}}: Ranked by {{type_name}}',
+                        fontSize:16
+                    },
+
+                    scales: {
+                        xAxes: [{
+                          scaleLabel: {
+                            display: true,
+                            labelString: 'number of {{type_name}}',
+                            fontSize: 14,
+                            fontColor: window.chartColors.blue,
+                          }
+                        }]
+                    }
+
+                }
+            });
+
+            var myHBar = document.getElementById("chart").getContext("2d");
+            window.myBar = new Chart(myHBar, {
+                type: 'bar',
+                data: barData,
+
+                options: {
+                    responsive: true,
+                    legend: {
+                        position: 'right',
+                    },
+                    title: {
+                        display: true,
+                        text: '{{user_name}}: Ranked By {{type_name}}',
+                        fontSize:16
+                    },
+                    scales: {
+                        xAxes: [{
+                          scaleLabel: {
+                            display: true,
+                            labelString: 'number of {{type_name}}',
+                            fontSize: 14,
+                            fontColor: window.chartColors.blue,
+                          }
+                        }]
                     }
                 }
             });
 
+
+
         };
-
-        document.getElementById('randomizeData').addEventListener('click', function() {
-            var zero = Math.random() < 0.2 ? true : false;
-            horizontalBarChartData.datasets.forEach(function(dataset) {
-                dataset.data = dataset.data.map(function() {
-                    return zero ? 0.0 : randomScalingFactor();
-                });
-
-            });
-            window.myHorizontalBar.update();
-        });
-
-        var colorNames = Object.keys(window.chartColors);
-
-        document.getElementById('addDataset').addEventListener('click', function() {
-            var colorName = colorNames[horizontalBarChartData.datasets.length % colorNames.length];;
-            var dsColor = window.chartColors[colorName];
-            var newDataset = {
-                label: 'Dataset ' + horizontalBarChartData.datasets.length,
-                backgroundColor: color(dsColor).alpha(0.5).rgbString(),
-                borderColor: dsColor,
-                data: []
-            };
-
-            for (var index = 0; index < horizontalBarChartData.labels.length; ++index) {
-                newDataset.data.push(randomScalingFactor());
-            }
-
-            horizontalBarChartData.datasets.push(newDataset);
-            window.myHorizontalBar.update();
-        });
-
-        document.getElementById('addData').addEventListener('click', function() {
-            if (horizontalBarChartData.datasets.length > 0) {
-                var month = MONTHS[horizontalBarChartData.labels.length % MONTHS.length];
-                horizontalBarChartData.labels.push(month);
-
-                for (var index = 0; index < horizontalBarChartData.datasets.length; ++index) {
-                    horizontalBarChartData.datasets[index].data.push(randomScalingFactor());
-                }
-
-                window.myHorizontalBar.update();
-            }
-        });
-
-        document.getElementById('removeDataset').addEventListener('click', function() {
-            horizontalBarChartData.datasets.splice(0, 1);
-            window.myHorizontalBar.update();
-        });
-
-        document.getElementById('removeData').addEventListener('click', function() {
-            horizontalBarChartData.labels.splice(-1, 1); // remove the label first
-
-            horizontalBarChartData.datasets.forEach(function (dataset, datasetIndex) {
-                dataset.data.pop();
-            });
-
-            window.myHorizontalBar.update();
-        });
-
-
 
     </script>
 </body>

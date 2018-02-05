@@ -1,6 +1,7 @@
 DROP TABLE user_top_month_list;
 CREATE TABLE user_top_month_list(
-uid int,
+uid bigint,
+user_name text,
 creation_date date,
 rt_word_list list<frozen <tuple<text,int>>>,
 rt_entity_list list<frozen <tuple<text,int>>>,
@@ -18,7 +19,8 @@ PRIMARY KEY (uid, creation_date)
 
 DROP TABLE user_top_year_list;
 CREATE TABLE user_top_year_list(
-uid int,
+uid bigint,
+user_name text,
 creation_date date,
 rt_word_list list<frozen <tuple<text,int>>>,
 rt_entity_list list<frozen <tuple<text,int>>>,
@@ -36,7 +38,8 @@ PRIMARY KEY (uid, creation_date)
 
 DROP TABLE user_top_quarter_list;
 CREATE TABLE user_top_quarter_list(
-uid int,
+uid bigint,
+user_name text,
 creation_date date,
 rt_word_list list<frozen <tuple<text,int>>>,
 rt_entity_list list<frozen <tuple<text,int>>>,
@@ -56,8 +59,8 @@ PRIMARY KEY (uid, creation_date)
 
 DROP TABLE user_top_list;
 CREATE TABLE user_top_list(
-uid int,
-creation_date date,
+uid bigint,
+user_name text,
 rt_word_list list<frozen <tuple<text,int>>>,
 rt_entity_list list<frozen <tuple<text,int>>>,
 fav_word_list list<frozen <tuple<text,int>>>,
@@ -68,7 +71,7 @@ rt_entity_occur_list list<frozen <tuple<text,int>>>,
 fav_word_occur_list list<frozen <tuple<text,int>>>,
 fav_entity_occur_list list<frozen <tuple<text,int>>>,
 
-PRIMARY KEY (uid, creation_date)
+PRIMARY KEY (uid, user_name)
 );
 
 

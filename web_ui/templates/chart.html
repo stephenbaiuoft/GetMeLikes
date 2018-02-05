@@ -12,7 +12,7 @@
 <script>
    // bar chart data
    var barData = {
-   labels : [{% for item in labels %}
+   labels : [{% for item in values %}
                   "{{item}}",
               {% endfor %}],
    datasets : [
@@ -31,7 +31,7 @@
    var mychart = document.getElementById("chart").getContext("2d");
 
    steps = 10
-   max = 5000000
+   max =
    // draw bar chart
    new Chart(mychart).Bar(barData, {
         scaleOverride: true,

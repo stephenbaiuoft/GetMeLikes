@@ -28,6 +28,11 @@
         padding: 10px;
         margin: 10px;
     }
+    div.dbox2 {
+        background-color: #e6ffff;
+        padding: 10px;
+        margin: 10px;
+    }
 
     </style>
 </head>
@@ -56,7 +61,7 @@
 
     <div class="dbox">
     <div id="container2" style="width: 100%;">
-        <canvas id="canvas2"></canvas>
+        <canvas id="chart"></canvas>
     </div>
 
     </div>
@@ -78,7 +83,24 @@
                       "{{item}}",
                   {% endfor %}
                   ],
-            }, ]}
+            }, ]};
+
+
+        var barData = {
+        labels : [{% for item in labels %}
+                      "{{item}}",
+                  {% endfor %}],
+        datasets : [{
+                label: "Top Word",
+                backgroundColor: color(window.chartColors.orange).alpha(0.5).rgbString(),
+                borderColor: window.chartColors.red,
+                data: [
+                     {% for item in values %}
+                      "{{item}}",
+                  {% endfor %}
+                  ],
+            }, ]};
+
 
         window.onload = function() {
             var ctx = document.getElementById("canvas").getContext("2d");
@@ -97,7 +119,7 @@
                     },
                     title: {
                         display: true,
-                        text: '{{user}}: Most Liked Tweets',
+                        text: '{{user_name}}: Ranked by {{type_name}}',
                         fontSize:16
                     },
 
@@ -115,26 +137,21 @@
                 }
             });
 
-            var ctx = document.getElementById("canvas2").getContext("2d");
-            window.myHorizontalBar = new Chart(ctx, {
-                type: 'horizontalBar',
-                data: hb,
+            var myHBar = document.getElementById("chart").getContext("2d");
+            window.myBar = new Chart(myHBar, {
+                type: 'bar',
+                data: barData,
+
                 options: {
-                    elements: {
-                        rectangle: {
-                            borderWidth: 5,
-                        }
-                    },
                     responsive: true,
                     legend: {
                         position: 'right',
                     },
                     title: {
                         display: true,
-                        text: '{{user}}: Most Liked Tweets by Time',
+                        text: '{{user_name}}: Ranked By {{type_name}}',
                         fontSize:16
                     },
-
                     scales: {
                         xAxes: [{
                           scaleLabel: {
@@ -145,9 +162,9 @@
                           }
                         }]
                     }
-
                 }
             });
+
 
 
         };
