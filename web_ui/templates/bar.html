@@ -39,7 +39,7 @@
 
 <body>
 
-    <center><h1>{{user_name}} Tweet Report</h1></center>
+    <center><h1>Your Tweet Report</h1></center>
     <div class="radiobox">
     <form align ='right'>
       <input type="radio" name="gender" value="male" checked> By retweet count<br>
@@ -67,11 +67,15 @@
     </div>
 
     <script>
+
         var color = Chart.helpers.color;
         var hb = {
             labels: [{% for item in labels %}
-                      "{{item}}",
-                  {% endfor %}],
+                        [{% for ii in item %}
+                            "{{ii}}",
+                        {% endfor %}  ],
+                  {% endfor %}]
+                  ,
             datasets: [{
                 label: "Top Words",
                 backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
@@ -130,7 +134,16 @@
                             fontColor: window.chartColors.blue,
                           }
                         }]
-                    }
+                    },
+                plugins: [{
+                  beforeInit: function(chart) {
+                     chart.data.labels.forEach(function(e, i, a) {
+                        if (/\n/.test(e)) {
+                           a[i] = e.split(/\n/);
+                        }
+                     });
+                  }
+               }]
 
                 }
             });
@@ -160,7 +173,16 @@
                           }
                         }]
                     }
-                }
+                },
+                plugins: [{
+                  beforeInit: function(chart) {
+                     chart.data.labels.forEach(function(e, i, a) {
+                        if (/\n/.test(e)) {
+                           a[i] = e.split(/\n/);
+                        }
+                     });
+                  }
+               }]
             });
 
 
