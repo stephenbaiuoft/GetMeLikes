@@ -4,7 +4,7 @@ from cassandra.cluster import Cluster
 from flask import Markup
 # for testing database
 import time
-from webconfig import *
+from web_ui.webconfig import *
 
 # helper methods
 def get_db():
@@ -75,15 +75,14 @@ def top_word_report():
     date = request.form['date']
     count_values = []
     word_labels = []
-    # do donald trump for now
-    db_session = get_db()
 
     top_limit = 5
     sql_cmd = "select rt_entity_list from demo_top_list where user_name =" \
               " \'" + user_name + "\' ALLOW FILTERING;"
 
-
     try:
+        # do donald trump for now
+        db_session = get_db()
         rows = db_session.execute(sql_cmd)
         for row in rows:
             for _tuple in row[0]:
@@ -109,10 +108,7 @@ def top_word_report():
         # tuple of (create-date, top_word, retweet_count)
         table_data = []
         for row in rows:
-            day = str(row[0])[:-2]
             if len(row[1]) > 1:
-                w = row[1][0][0]
-                c = row[1][0][1]
                 # insert @ beginning
                 table_data.insert(0, (str(row[0])[:-3],
                                row[1][0][0], row[1][0][1]) )
@@ -127,15 +123,15 @@ def top_word_report():
                                )
 
     except Exception as e:
-        print("An Error Occur: default values")
+        print("An Error Occur: Default Template Values")
         # or pop a window?
 
         word_labels = [['Hey realDonaldTrump'], ['realDonaldTrump Merylsayshi'],
                        ['Tonight']]
         count_values = [250864, 189237, 119746]
-        table_data  = (("n/a", "n/a", "n/"))
+        table_data  = (("N/A", "N/A", "N/A"))
         return render_template('bar_display.html', user_name='Query Went Wrong',
-                               type_name="retweets",
+                               type_name="Retweet",
                                values=count_values, labels=word_labels,
                                table_data = table_data
                                )
