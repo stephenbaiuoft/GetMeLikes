@@ -2,13 +2,19 @@ from flask import render_template, redirect, url_for, request, g
 from web_ui import webapp
 from cassandra.cluster import Cluster
 from flask import Markup
+# for testing database
+import time
+from webconfig import *
 
 # helper methods
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:
-        cluster = Cluster(['ec2-52-40-21-59.us-west-2.compute.amazonaws.com',
-                           'ec2-34-216-135-39.us-west-2.compute.amazonaws.com'])
+        cluster = Cluster([DB_URL1,
+                           DB_URL2,
+                           DB_URL3,
+                           DB_URL4
+                           ])
         session = cluster.connect('twitter')
         db = g._database = session
     return db
@@ -19,9 +25,7 @@ def get_db():
 # Display an HTML page with links
 @webapp.route('/main', methods=['GET','POST'])
 def main():
-    # init database already
-    get_db()
-    print("entering main function")
+    print("Displaying Main Function")
     return render_template("main.html", title="Landing Page")
 
 
@@ -47,14 +51,13 @@ def show_bar_test():
 # show top_word_list, given an id
 @webapp.route('/top_word_report', methods=['GET','POST'])
 # Display random key word count for some id
-def top_word_list():
+def top_word_report():
     # add _word as an array form to _list
     # if the _word is too long
     def add_to_display_list(_list, _word):
         if len(_word) <=20:
             _list.append([_word])
             return
-
         l = len(_word)
         _s = 0
         _e = 1
@@ -117,7 +120,7 @@ def top_word_list():
         print(table_data)
 
         return render_template('bar_display.html', user_name=user_name,
-                               type_name="retweets",
+                               type_name="Retweet",
                                values=count_values,
                                labels=word_labels,
                                table_data=table_data
