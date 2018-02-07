@@ -1,3 +1,4 @@
+#This is for user!!!!
 DROP TABLE user_top_list;
 DROP TABLE user_top_quarter_list;
 DROP TABLE user_top_year_list;

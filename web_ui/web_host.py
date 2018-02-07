@@ -79,11 +79,6 @@ def top_word_list():
     sql_cmd = "select rt_entity_list from demo_top_list where user_name =" \
               " \'" + user_name + "\' ALLOW FILTERING;"
 
-    sql_cmd_bytime = "select creation_date, rt_entity_list from demo_top_quarter_list"\
-                     +" where user_name =" \
-              " \'" + user_name + "\' and creation_date < \'" + date + "\' ;"
-
-    print(sql_cmd_bytime)
 
     try:
         rows = db_session.execute(sql_cmd)
@@ -100,22 +95,32 @@ def top_word_list():
         print(word_labels)
         print(count_values)
 
+
+        sql_cmd_bytime = "select creation_date, rt_entity_list from demo_top_month_list" \
+                         + " where user_name =" \
+                           " \'" + user_name + "\' and creation_date > \'" + date + "\' ;"
+        print(sql_cmd_bytime)
         # time series query
         rows = db_session.execute(sql_cmd_bytime)
-        # only 1
-        x_ary = []
-        top_word_date_ary = []
 
+        # tuple of (create-date, top_word, retweet_count)
+        table_data = []
         for row in rows:
-            x_ary.append([str(row[0]), row[1][0][0]])
-            top_word_date_ary.append(row[1][0][1])
+            day = str(row[0])[:-2]
+            if len(row[1]) > 1:
+                w = row[1][0][0]
+                c = row[1][0][1]
+                # insert @ beginning
+                table_data.insert(0, (str(row[0])[:-3],
+                               row[1][0][0], row[1][0][1]) )
 
-        return render_template('bar_display.html', user_name='Jimmy Kimmel',
+        print(table_data)
+
+        return render_template('bar_display.html', user_name=user_name,
                                type_name="retweets",
                                values=count_values,
                                labels=word_labels,
-                               x_ary=x_ary,
-                               top_word_date_ary=top_word_date_ary
+                               table_data=table_data
                                )
 
     except Exception as e:
@@ -125,9 +130,12 @@ def top_word_list():
         word_labels = [['Hey realDonaldTrump'], ['realDonaldTrump Merylsayshi'],
                        ['Tonight']]
         count_values = [250864, 189237, 119746]
+        table_data  = (("n/a", "n/a", "n/"))
         return render_template('bar_display.html', user_name='Query Went Wrong',
                                type_name="retweets",
-                               values=count_values, labels=word_labels)
+                               values=count_values, labels=word_labels,
+                               table_data = table_data
+                               )
 
 
 

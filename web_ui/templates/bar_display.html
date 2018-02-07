@@ -2,7 +2,19 @@
 <html>
 
 <head>
-    <title>Horizontal Bar Chart II</title>
+
+	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+	<link rel="stylesheet" type="text/css" href="vendor/perfect-scrollbar/perfect-scrollbar.css">
+	<link rel="stylesheet" type="text/css" href="css/util.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/util.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/main.css') }}">
+
+    <title>Personal Twitter Report</title>
     <script src="static/Chart.bundle.js"></script>
     <script src="static/utils.js"></script>
     <script src="static/custom_util.js"> </script>
@@ -40,31 +52,58 @@
 <body>
 
     <center><h1>{{user_name}} Tweet Report</h1></center>
-    <div class="radiobox">
-    <form align ='right'>
-      <input type="radio" name="retweet_box" checked> By retweet count<br>
-      <input type="radio" name="fav_box" > By favourate count<br>
-    </form>
-    </div>
+
+    <!--<div class="radiobox">-->
+    <!--<form align ='right'>-->
+      <!--<input type="radio" name="retweet_box" checked> By retweet count<br>-->
+      <!--<input type="radio" name="fav_box" > By favourate count<br>-->
+    <!--</form>-->
+    <!--</div>-->
 
     <br>
     <div class="dbox">
+
     <div id="container" style="width: 100%;">
         <canvas id="canvas"></canvas>
     </div>
     </div>
 
-    <br>
-    <br>
-    <br>
-    <br>
+	<br><br>
+	<center><h3>{{user_name}} Monthly Rank Table</h3></center>
+    <div class="limiter">
+		<div class="container-table100">
+			<div class="wrap-table100">
+				<div class="table100 ver1 m-b-110">
+					<div class="table100-head">
+						<table>
+							<thead>
+								<tr class="row100 head">
+									<th class="cell100 column1">Time Interval</th>
+									<th class="cell100 column2">Entity Name</th>
+									<th class="cell100 column3">Retweet Count</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
 
-    <div class="dbox">
-    <div id="container2" style="width: 100%;">
-        <canvas id="chart"></canvas>
-    </div>
+					<div class="table100-body js-pscroll">
+						<table>
+							<tbody>
+								{% for data in table_data %}
+								<tr class="row100 body">
+									<td class="cell100 column1">{{data[0]}}</td>
+									<td class="cell100 column2">{{data[1]}}</td>
+									<td class="cell100 column3">{{data[2]}}</td>
+								</tr>
+								{% endfor %}
 
-    </div>
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+		</div>
 
     <script>
 
@@ -87,24 +126,6 @@
                   ],
             }, ]};
 
-
-        var barData = {
-            labels: [{% for item in x_ary %}
-                        [{% for ii in item %}
-                            "{{ii}}",
-                        {% endfor %}  ],
-                  {% endfor %}]
-                  ,
-        datasets : [{
-                label: "Top Word",
-                backgroundColor: color(window.chartColors.orange).alpha(0.5).rgbString(),
-                borderColor: window.chartColors.red,
-                data: [
-                     {% for item in top_word_date_ary %}
-                      "{{item}}",
-                  {% endfor %}
-                  ],
-            }, ]};
 
 
         window.onload = function() {
@@ -142,39 +163,11 @@
                 }
             });
 
-            var myHBar = document.getElementById("chart").getContext("2d");
-            window.myBar = new Chart(myHBar, {
-                type: 'bar',
-                data: barData,
-
-                options: {
-                    responsive: true,
-                    legend: {
-                        position: 'right',
-                    },
-                    title: {
-                        display: true,
-                        text: '{{user_name}}: Ranked By {{type_name}}',
-                        fontSize:16
-                    },
-                    scales: {
-                        xAxes: [{
-                          scaleLabel: {
-                            display: true,
-                            labelString: 'number of {{type_name}}',
-                            fontSize: 14,
-                            fontColor: window.chartColors.blue,
-                          }
-                        }]
-                    }
-                }
-            });
-
-
-
         };
 
     </script>
+    </div>
+	</div>
 </body>
 
 </html>
