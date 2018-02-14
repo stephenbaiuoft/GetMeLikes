@@ -19,6 +19,17 @@ def get_db():
         db = g._database = session
     return db
 
+def get_db_cassandra():
+    db = getattr(g, '_database', None)
+    if db is None:
+        cluster = Cluster([CASSANDRA_C1,
+                           CASSANDRA_C2,
+                           CASSANDRA_C3
+                           ])
+        session = cluster.connect('twitter')
+        db = g._database = session
+    return db
+
 
 @webapp.route('/',methods=['GET'])
 @webapp.route('/index',methods=['GET'])
@@ -49,24 +60,112 @@ def show_bar_test():
 
 
 # show top_word_list, given an id
+# @webapp.route('/top_word_report', methods=['GET','POST'])
+# # Display random key word count for some id
+# def top_word_report():
+#     # add _word as an array form to _list
+#     # if the _word is too long
+#     def add_to_display_list(_list, _word):
+#         if len(_word) <=20:
+#             _list.append([_word])
+#             return
+#         l = len(_word)
+#         _s = 0
+#         _e = 1
+#         element = []
+#         while _s < l/20:
+#             if _s == 0:
+#                 element.append(_word[_s*20: _e*20])
+#             else:
+#                 element.append('-'+_word[_s * 20: _e * 20])
+#             _s = _e
+#             _e += 1
+#         _list.append(element)
+#
+#     user_name = request.form['user_name']
+#     date = request.form['date']
+#     count_values = []
+#     word_labels = []
+#
+#     top_limit = 5
+#     sql_cmd = "select rt_entity_list from demo_top_list where user_name =" \
+#               " \'" + user_name + "\' ALLOW FILTERING;"
+#
+#     try:
+#         # do donald trump for now
+#         db_session = get_db()
+#         rows = db_session.execute(sql_cmd)
+#         for row in rows:
+#             for _tuple in row[0]:
+#                 print("tuple_value is: ", _tuple)
+#                 if top_limit == 0:
+#                     break
+#                 top_limit -= 1
+#                 count_values.append(_tuple[1])
+#                 add_to_display_list(word_labels, _tuple[0])
+#
+#         # debugging purpose
+#         print(word_labels)
+#         print(count_values)
+#
+#
+#         sql_cmd_bytime = "select creation_date, rt_entity_list from demo_top_month_list" \
+#                          + " where user_name =" \
+#                            " \'" + user_name + "\' and creation_date > \'" + date + "\' ;"
+#         print(sql_cmd_bytime)
+#         # time series query
+#         rows = db_session.execute(sql_cmd_bytime)
+#
+#         # tuple of (create-date, top_word, retweet_count)
+#         table_data = []
+#         for row in rows:
+#             if len(row[1]) > 1:
+#                 # insert @ beginning
+#                 table_data.insert(0, (str(row[0])[:-3],
+#                                row[1][0][0], row[1][0][1]) )
+#
+#         print(table_data)
+#
+#         return render_template('bar_display.html', user_name=user_name,
+#                                type_name="Retweet",
+#                                values=count_values,
+#                                labels=word_labels,
+#                                table_data=table_data
+#                                )
+#
+#     except Exception as e:
+#         print("An Error Occur: Default Template Values")
+#         # or pop a window?
+#
+#         word_labels = [['Hey realDonaldTrump'], ['realDonaldTrump Merylsayshi'],
+#                        ['Tonight']]
+#         count_values = [250864, 189237, 119746]
+#         table_data  = (("N/A", "N/A", "N/A"))
+#         return render_template('bar_display.html', user_name='Query Went Wrong',
+#                                type_name="Retweet",
+#                                values=count_values, labels=word_labels,
+#                                table_data = table_data
+#                                )
+
+
 @webapp.route('/top_word_report', methods=['GET','POST'])
 # Display random key word count for some id
 def top_word_report():
     # add _word as an array form to _list
     # if the _word is too long
     def add_to_display_list(_list, _word):
-        if len(_word) <=20:
+        if len(_word) <=22:
             _list.append([_word])
             return
         l = len(_word)
         _s = 0
         _e = 1
         element = []
-        while _s < l/20:
+        while _s < l/22:
             if _s == 0:
-                element.append(_word[_s*20: _e*20])
+                element.append(_word[_s*22: _e*22])
             else:
-                element.append('-'+_word[_s * 20: _e * 20])
+                element.append('-'+_word[_s * 22: _e * 22])
             _s = _e
             _e += 1
         _list.append(element)
@@ -77,28 +176,37 @@ def top_word_report():
     word_labels = []
 
     top_limit = 5
-    sql_cmd = "select rt_entity_list from demo_top_list where user_name =" \
+    sql_cmd = "select rt_entity_list from user_top_list where user_name =" \
               " \'" + user_name + "\' ALLOW FILTERING;"
 
     try:
         # do donald trump for now
-        db_session = get_db()
+        db_session = get_db_cassandra()
         rows = db_session.execute(sql_cmd)
+        tmp_list = []
         for row in rows:
             for _tuple in row[0]:
                 print("tuple_value is: ", _tuple)
-                if top_limit == 0:
-                    break
-                top_limit -= 1
-                count_values.append(_tuple[1])
-                add_to_display_list(word_labels, _tuple[0])
+                tmp_list.append(_tuple)
+
+        tmp_list.sort(key= lambda x: x[1], reverse=True)
+        print("tmp_list is: ", tmp_list)
+
+        for _tuple in tmp_list:
+            if top_limit == 0:
+                break
+            top_limit -= 1
+            # count_values.append(_tuple[1])
+            # add_to_display_list(word_labels, _tuple[0])
+            count_values.append( _tuple[1])
+            add_to_display_list(word_labels, _tuple[0])
 
         # debugging purpose
         print(word_labels)
         print(count_values)
 
 
-        sql_cmd_bytime = "select creation_date, rt_entity_list from demo_top_month_list" \
+        sql_cmd_bytime = "select creation_date, rt_entity_list from user_top_month_list" \
                          + " where user_name =" \
                            " \'" + user_name + "\' and creation_date > \'" + date + "\' ;"
         print(sql_cmd_bytime)
@@ -110,7 +218,7 @@ def top_word_report():
         for row in rows:
             if len(row[1]) > 1:
                 # insert @ beginning
-                table_data.insert(0, (str(row[0])[:-3],
+                table_data.append( (str(row[0])[:-3],
                                row[1][0][0], row[1][0][1]) )
 
         print(table_data)
@@ -135,9 +243,6 @@ def top_word_report():
                                values=count_values, labels=word_labels,
                                table_data = table_data
                                )
-
-
-
 
 @webapp.route('/random_id', methods=['GET'])
 # Display random key word count for some id
