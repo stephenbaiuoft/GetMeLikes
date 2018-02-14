@@ -33,8 +33,6 @@ processed tweeter data
 
 - *Cassandra*: to store parsed certain keywords and data, for time series data
 
-- *Spark Streaming*: to handle real-time twitter data and update the database
-
 # Proposed architecture (Lamda Architecture)
 
-<img src=https://s3-us-west-2.amazonaws.com/stephen-image-storage/insight-project/model-01.jpg>
+<img src=https://s3-us-west-2.amazonaws.com/stephen-image-storage/insight-project/model-02.jpg>
