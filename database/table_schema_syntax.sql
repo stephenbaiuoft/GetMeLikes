@@ -1,3 +1,7 @@
+CREATE MATERIALIZED VIEW user_top_view AS SELECT uid, user_name, rt_entity_list
+ from user_top_list where user_name IS NOT NULL PRIMARY KEY (user_name, uid) ;
+ 
+
 #This is for user!!!!
 DROP TABLE user_top_list;
 DROP TABLE user_top_quarter_list;

@@ -176,7 +176,7 @@ def top_word_report():
     word_labels = []
 
     top_limit = 5
-    sql_cmd = "select rt_entity_list from user_top_list where user_name =" \
+    sql_cmd = "select rt_entity_list from user_top_view where user_name =" \
               " \'" + user_name + "\' ALLOW FILTERING;"
 
     try:
